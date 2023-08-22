@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
 # Configuration du logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Charger les données du fichier drugs.json avec l'encodage correct
@@ -17,21 +17,30 @@ id_to_data = {}
 data_to_id = {}
 current_id = 0
 
+def get_username(update):
+    user = update.effective_user
+    return user.username if user and user.username else "no user"
+
 def clear_cart(update, context):
     user_id = update.effective_user.id
+    username = get_username(update)
     if user_id in user_carts:
         del user_carts[user_id]
     display_cart(update, context)
+    logger.info(f"Utilisateur {user_id} ({username}) a vidé son panier.")
 
 def add_to_cart(user_id, product, price, update, context):
+    username = get_username(update)  # Ajout de cette ligne
     cart = user_carts.get(user_id, {})
     product_details = cart.get(product, {"price": price, "quantity": 0})
     product_details["quantity"] += 1
     cart[product] = product_details
     user_carts[user_id] = cart
+    logger.info(f"Utilisateur {user_id} ({username}) a ajouté {product} ({price}€)")
 
 def display_cart(update, context):
     user_id = update.effective_user.id
+    username = get_username(update)
     cart = user_carts.get(user_id, {})
     
     total_price = 0
@@ -68,6 +77,8 @@ def display_cart(update, context):
         message = context.bot.send_message(chat_id=update.effective_chat.id, text=cart_message, reply_markup=markup)
         user_message_ids[user_id] = message.message_id
 
+    logger.info(f"Utilisateur {user_id} ({username}) a affiché son panier.({total_price}€).")
+
 def extract_price(price_str):
     return float(price_str.replace("€", "").replace(",", ".").strip())
 
@@ -98,7 +109,7 @@ def generate_keyboard(data, prefix="", back_data=None):
 
 def start(update, context):
     keyboard = generate_keyboard(drugs_data)
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Choisissez une catégorie:', reply_markup=keyboard)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Choisissez une catégorie (Version 31) :', reply_markup=keyboard)
 
 def dynamic_access(data, keys_sequence):
     for key in keys_sequence:
@@ -107,7 +118,7 @@ def dynamic_access(data, keys_sequence):
 
 def button(update, context):
     query = update.callback_query
-    
+
     if query.data == "clear_cart":
         clear_cart(update, context)
         return
@@ -116,16 +127,16 @@ def button(update, context):
         return
     
     query.answer()
-    
+
     button_id = int(query.data)
     if button_id == -1:  # The "Back" button
         keyboard = generate_keyboard(drugs_data)
         query.edit_message_text(text="Choisissez une catégorie:", reply_markup=keyboard)
         return
-    
+
     current_key = id_to_data[button_id]
     keys = current_key.split("/")
-    
+
     next_data = drugs_data
     for key in keys:
         next_data = next_data[key]
