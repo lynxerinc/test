@@ -1,0 +1,91 @@
+{
+    "Drogues et Médicaments": {
+        "Vente de drogues dures": {
+            "Héroïne": {},
+            "Cocaïne": {},
+            "Méthamphétamine": {},
+            "MDMA": {}
+        },
+        "Prescription": {
+            "Antibiotiques": {
+                "Amoxicilline": {},
+                "Céfalexine": {},
+                "Azithromycine": {},
+                "Doxycycline": {},
+                "Ciprofloxacine": {},
+                "Clarithromycine": {}
+            },
+            "Analgésiques": {
+                "Tramadol": {},
+                "Codéine": {},
+                "Oxycodone": {},
+                "Morphine": {},
+                "Paracétamol (Acétaminophène)": {},
+                "Ibuprofène": {}
+            },
+            "Antidépresseurs": {
+                "Sertraline": {},
+                "Fluoxétine": {},
+                "Citalopram": {},
+                "Escitalopram": {},
+                "Venlafaxine": {},
+                "Duloxétine": {}
+            },
+            "Antihypertenseurs": {
+                "Amlodipine": {},
+                "Losartan": {},
+                "Hydrochlorothiazide": {},
+                "Lisinopril": {},
+                "Metoprolol": {},
+                "Enalapril": {}
+            },
+            "Hypnotiques/Sédatifs :": {
+                "Zolpidem": {},
+                "Diazépam": {},
+                "Lorazépam": {},
+                "Zopiclone": {},
+                "Eszopiclone": {},
+                "Zaleplon": {}
+            },
+            "Antihistaminiques :": {
+                "Cétirizine": {},
+                "Loratadine": {},
+                "Fexofénadine": {},
+                "Desloratadine": {},
+                "Lévocétirizine": {},
+                "Cétirizine + pseudoéphédrine": {}
+            },
+            "thyroïdebuster": {
+                "Levothyroxine (lévothyroxine sodique)": {},
+                "Liothyronine (triiodothyronine)": {}
+            },
+            "diabetebuster": {
+                "Metformine": {},
+                "Insuline (différents types selon les besoins)": {
+                    "Insuline à action rapide": {
+                        "Insuline lispro (Humalog)": {},
+                        "Insuline asparte (NovoLog)": {},
+                        "Insuline glulisine (Apidra)": {}
+                    },
+                    "Insuline à action intermédiaire": {
+                        "Insuline NPH (Insulatard, Humulin N, Novolin N)": {}
+                    },
+                    "Insuline à action prolongée (basale": {
+                        "Insuline glargine (Lantus, Basaglar, Toujeo)": {},
+                        "Insuline detemir (Levemir)": {},
+                        "Insuline degludec (Tresiba)": {}
+                    },
+                    "Insuline pré-mix": {
+                        "Insuline biphasique lispro (Humalog Mix)": {},
+                        "Insuline biphasique asparte (NovoMix)": {},
+                        "Insuline biphasique glargine (Soliqua)": {}
+                    }
+                },
+                "Glibenclamide": {},
+                "Glipizide": {},
+                "Sitagliptine": {},
+                "Pioglitazone": {}
+            }
+        }
+    }
+}
