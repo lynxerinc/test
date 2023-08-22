@@ -109,7 +109,7 @@ def generate_keyboard(data, prefix="", back_data=None):
 
 def start(update, context):
     keyboard = generate_keyboard(drugs_data)
-    context.bot.send_message(chat_id=update.effective_chat.id, text='Choisissez une catégorie (Version 31) :', reply_markup=keyboard)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Choisissez une catégorie :', reply_markup=keyboard)
 
 def dynamic_access(data, keys_sequence):
     for key in keys_sequence:
