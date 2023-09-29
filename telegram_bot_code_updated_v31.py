@@ -16,10 +16,33 @@ user_message_ids = {}
 id_to_data = {}
 data_to_id = {}
 current_id = 0
+users = {}
+
+# Sauvegarder les données utilisateur dans un fichier
+def save_users_to_file(users, filename="users.json"):
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(users, file, ensure_ascii=False)
+
+# Charger les données utilisateur au démarrage
+def load_users_from_file(filename="users.json"):
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+users = load_users_from_file()
 
 def get_username(update):
     user = update.effective_user
     return user.username if user and user.username else "no user"
+
+def update_user_info(user_id, action_type, update, context=None):
+    user_info = users.get(user_id, {"username": get_username(update), "actions": []})
+    action = {"type": action_type, "details": context}
+    user_info["actions"].append(action)
+    users[user_id] = user_info
+    save_users_to_file(users)
 
 def clear_cart(update, context):
     user_id = update.effective_user.id
@@ -27,16 +50,18 @@ def clear_cart(update, context):
     if user_id in user_carts:
         del user_carts[user_id]
     display_cart(update, context)
-    logger.info(f"Utilisateur {user_id} ({username}) a vidé son panier.")
+    logger.info(f"Utilisateur {user_id} (user {username}) a vidé son panier.")
+    update_user_info(user_id, "cleared_cart", update)
 
 def add_to_cart(user_id, product, price, update, context):
-    username = get_username(update)  # Ajout de cette ligne
     cart = user_carts.get(user_id, {})
     product_details = cart.get(product, {"price": price, "quantity": 0})
     product_details["quantity"] += 1
     cart[product] = product_details
     user_carts[user_id] = cart
-    logger.info(f"Utilisateur {user_id} ({username}) a ajouté {product} ({price}€)")
+    username = get_username(update)
+    logger.info(f"Utilisateur {user_id} (user {username}) a ajouté {product} (prix: {price}€) à son panier.")
+    update_user_info(user_id, "added_to_cart", update, {"product": product, "price": price})
 
 def display_cart(update, context):
     user_id = update.effective_user.id
@@ -63,9 +88,13 @@ def display_cart(update, context):
             cart_message += f"  - {weight_price} | Qté : {quantity} | Sous-total : {price * quantity}€\n"
     cart_message += "---------------------\nTotal : " + str(total_price) + "€"
     
-    keyboard = [[InlineKeyboardButton("🗑️ Vider le panier", callback_data="clear_cart")]]
+    keyboard = [
+        [
+            InlineKeyboardButton("🗑️ Vider tout le panier", callback_data="clear_cart"),
+            InlineKeyboardButton("🗑️ Supprimer des produits", callback_data="delete_products")
+        ]
+    ]
     markup = InlineKeyboardMarkup(keyboard)
-
     message_id = user_message_ids.get(user_id)
     if message_id:
         try:
@@ -79,6 +108,35 @@ def display_cart(update, context):
 
     logger.info(f"Utilisateur {user_id} ({username}) a affiché son panier.({total_price}€).")
 
+# Nouvelle fonction pour supprimer des produits spécifiques
+def delete_specific_product(update, context):
+    user_id = update.effective_user.id
+    cart = user_carts.get(user_id, {})
+
+    if not cart:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Votre panier est vide.")
+        return
+
+    keyboard = []
+    for product in cart.keys():
+        keyboard.append([InlineKeyboardButton(f"❌ {product}", callback_data=f"delete_product:{product}")])
+
+    keyboard.append([InlineKeyboardButton("🔙 Revenir au panier", callback_data="cart"), InlineKeyboardButton("🗑️ Vider tout le panier", callback_data="clear_cart")])
+
+    markup = InlineKeyboardMarkup(keyboard)
+
+    message_id = user_message_ids.get(user_id)
+    context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id=message_id, reply_markup=markup)
+
+def delete_product(update, context, product_to_delete):
+    user_id = update.effective_user.id
+    cart = user_carts.get(user_id, {})
+
+    if product_to_delete in cart:
+        del cart[product_to_delete]
+
+    display_cart(update, context)
+        
 def extract_price(price_str):
     return float(price_str.replace("€", "").replace(",", ".").strip())
 
@@ -108,6 +166,18 @@ def generate_keyboard(data, prefix="", back_data=None):
     return InlineKeyboardMarkup(keyboard)
 
 def start(update, context):
+    user_id = update.effective_user.id
+    username = get_username(update)
+
+    # Vérifier si l'utilisateur existe déjà
+    if user_id not in users:
+        users[user_id] = {"username": username, "actions": []}
+        save_users_to_file(users) # Sauvegarder les données utilisateur dans le fichier
+
+        # Message de bienvenue pour les nouveaux utilisateurs
+        welcome_message = f"Bienvenue, {username}!"
+        context.bot.send_message(chat_id=update.effective_chat.id, text=welcome_message)
+
     keyboard = generate_keyboard(drugs_data)
     context.bot.send_message(chat_id=update.effective_chat.id, text='Choisissez une catégorie :', reply_markup=keyboard)
 
@@ -118,13 +188,35 @@ def dynamic_access(data, keys_sequence):
 
 def button(update, context):
     query = update.callback_query
-
+    
+    # Pour effacer le panier
     if query.data == "clear_cart":
         clear_cart(update, context)
         return
+    
+    # Pour afficher le panier
     elif query.data == "cart":
         display_cart(update, context)
         return
+    
+    # Pour supprimer un produit spécifique du panier
+    elif query.data == "delete_products":
+        delete_specific_product(update, context)
+        return
+    
+    # Pour gérer la suppression d'un produit spécifique
+    try:
+        button_id = int(query.data)
+    except ValueError:
+        if query.data.startswith("delete_product:"):
+            product_to_delete = query.data.split(":")[1]
+            if product_to_delete.startswith("{") and product_to_delete.endswith("}"):
+                product_to_delete = product_to_delete[1:-1]
+            delete_product(update, context, product_to_delete)
+            return
+        else:
+            logger.error(f"Invalid button data: {query.data}")
+            return
     
     query.answer()
 
@@ -152,7 +244,7 @@ def button(update, context):
             display_cart(update, context)
         else:
             query.edit_message_text(text=f"Vous avez sélectionné {keys[-1]}. Aucune sous-catégorie disponible.")
-
+    
 def main():
     updater = Updater(token='5938970819:AAGH21yb_8MEn3HieRRJ-4B1wNrDhIzLzHU', use_context=True)
     dp = updater.dispatcher
@@ -163,3 +255,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+d
