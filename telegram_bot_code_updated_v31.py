@@ -94,6 +94,9 @@ def display_cart(update, context):
             InlineKeyboardButton("🗑️ Supprimer des produits", callback_data="delete_products")
         ]
     ]
+    if cart:  # Si le panier n'est pas vide
+        keyboard.append([InlineKeyboardButton("🛒 Checkout", callback_data="checkout")])        
+    
     markup = InlineKeyboardMarkup(keyboard)
     message_id = user_message_ids.get(user_id)
     if message_id:
@@ -203,6 +206,85 @@ def button(update, context):
     elif query.data == "delete_products":
         delete_specific_product(update, context)
         return
+
+    elif query.data == "checkout":
+        info_message = """
+        🛒 **Procédure de Checkout - Étape par Étape** 🛒
+        ---------------------------------------
+        
+        🌟 **Étape 1 : Sélection du Mode de Paiement**
+        À cette étape, vous aurez le choix entre plusieurs options de paiement : Bitcoin, Monero, Solana, VRM, et paiement en espèces pour les retraits sur place. Chaque option a ses propres avantages et inconvénients. Assurez-vous de choisir celle qui vous convient le mieux, car cela déterminera le processus que vous devrez suivre par la suite.
+        
+        🌟 **Étape 2 : Fourniture du Fichier PGP**
+        Avant de procéder au paiement, vous devrez nous fournir un fichier PGP contenant les détails de votre livraison. Ce fichier sera utilisé pour chiffrer toutes les communications ultérieures concernant votre commande.
+        
+        🌟 **Étape 3 : Vérification des Informations**
+        Une fois le fichier PGP reçu, nous procéderons à la vérification des informations qu'il contient. Ce processus peut prendre un peu de temps, mais il est essentiel pour garantir la confidentialité et la sécurité de votre commande.
+        
+        🌟 **Étape 4 : Détails du Paiement**
+        Après avoir vérifié vos informations, nous vous enverrons les détails pour effectuer le paiement. Ces informations seront chiffrées avec le fichier PGP que vous avez fourni pour garantir leur sécurité.
+        
+        🌟 **Étape 5 : Confirmation et Livraison**
+        Après réception et vérification du paiement, votre commande sera préparée et expédiée. Vous recevrez une confirmation chiffrée et des informations sur le suivi de la livraison.
+        
+        📌 **Note Importante**
+        Pour garantir une expérience d'achat sécurisée, assurez-vous de suivre ces étapes attentivement. En cas de problème ou de question, n'hésitez pas à nous contacter.
+        
+        Merci de faire confiance à notre service ! Nous nous réjouissons de vous offrir une expérience d'achat sécurisée et satisfaisante.
+        """
+        context.bot.send_message(chat_id=update.effective_chat.id, text=info_message)
+        
+        keyboard = [
+            [InlineKeyboardButton("Bitcoin", callback_data="payment_bitcoin")],
+            [InlineKeyboardButton("Monero", callback_data="payment_monero")],
+            [InlineKeyboardButton("Solana", callback_data="payment_solana")],
+            [InlineKeyboardButton("VRM", callback_data="payment_vrm")],
+            [InlineKeyboardButton("Espèce (Retraits sur place uniquement)", callback_data="payment_cash")]
+        ]
+        markup = InlineKeyboardMarkup(keyboard)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Choisissez votre moyen de paiement:", reply_markup=markup)
+    
+    elif query.data.startswith("payment_"):
+        payment_method = query.data.split("_")[1]
+        payment_info = "Voici les détails pour effectuer le paiement..."  # Valeur par défaut
+    
+        if payment_method == "bitcoin":
+            payment_info = "Option Bitcoin confirmée. Veuillez suivre les étapes suivantes :\n" \
+                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
+                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Bitcoin pour effectuer le paiement."
+        
+        elif payment_method == "monero":
+            payment_info = "Option Monero confirmée. Veuillez suivre les étapes suivantes :\n" \
+                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
+                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Monero pour effectuer le paiement."
+        
+        elif payment_method == "solana":
+            payment_info = "Option Solana confirmée. Veuillez suivre les étapes suivantes :\n" \
+                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
+                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Solana pour effectuer le paiement."
+        
+        elif payment_method == "vrm":
+            payment_info = "Option VRM confirmée. Veuillez suivre les étapes suivantes :\n" \
+                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
+                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse VRM pour effectuer le paiement."
+        
+        elif payment_method == "cash":
+            payment_info = "Option Espèce confirmée (Retraits sur place uniquement). Veuillez suivre les étapes suivantes :\n" \
+                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
+                           "2. Une fois les informations vérifiées, vous pourrez vous rendre au point de retrait pour effectuer le paiement en espèces."
+
+    
+        context.bot.send_message(chat_id=update.effective_chat.id, text=payment_info)
+
+    
+        # Demande du fichier PGP
+        keyboard = [[InlineKeyboardButton("🔐 Envoyer le fichier PGP", callback_data="send_pgp")]]
+        markup = InlineKeyboardMarkup(keyboard)
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Veuillez envoyer votre fichier PGP pour les détails de livraison.", reply_markup=markup)
+
+    elif query.data == "send_pgp":
+        error_message = "Le format standard pour l'envoi de fichiers PGP n'est pas respecté. Veuillez suivre les instructions fournies."
+        context.bot.send_message(chat_id=update.effective_chat.id, text=error_message)    
     
     # Pour gérer la suppression d'un produit spécifique
     try:

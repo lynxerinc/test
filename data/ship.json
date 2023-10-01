@@ -1,0 +1,32 @@
+{
+  "shipping_options": [
+    {
+      "type": "Retrait",
+      "isAvailable": true,
+      "sub_options": [
+        {
+          "country": "France",
+          "isAvailable": true,
+          "cities": [
+            {"name": "Paris", "isAvailable": true},
+            {"name": "Lyon", "isAvailable": false},
+            {"name": "Marseille", "isAvailable": true}
+          ]
+        },
+        {
+          "country": "Belgique",
+          "isAvailable": true,
+          "cities": [
+            {"name": "Bruxelles", "isAvailable": true},
+            {"name": "Anvers", "isAvailable": true}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Livraison",
+      "isAvailable": true,
+      "input_required": true
+    }
+  ]
+}

@@ -1,91 +1,92 @@
 {
-    "Drogues et Médicaments": {
-        "Vente de drogues dures": {
-            "Héroïne": {},
-            "Cocaïne": {},
-            "Méthamphétamine": {},
-            "MDMA": {}
+  "Drogues et Médicaments": {
+    "Produit proactif": {
+      "Héroïne": {
+        "Héroïne - 1GR - 35€": "35",
+        "Héroïne - 2GR - 65€": "65",
+        "Héroïne - 3GR - 95€": "95",
+        "Héroïne - 4GR - 120€": "120",
+        "Héroïne - 5GR - 150€": "150",
+        "Héroïne - 10GR - 280€": "280",
+        "Héroïne - 20GR - 500€": "500",
+        "Héroïne - 50 GR - 1200€": "1200",
+        "Héroïne - 100 GR - 2200€": "2200"
+      },
+      "Cocaïne": {
+        "Cocaïne - 2GR - 153€": "153",
+        "Cocaïne - 5GR - 310€": "310",
+        "Cocaïne - 10GR - 580€": "580",
+        "Cocaïne - 25GR - 1350€": "1350",
+        "Cocaïne - 50GR - 2400€": "2400",
+        "Cocaïne - 100GR - 4900€": "4900"
+      },
+      "Méthamphétamine": {
+        "Méthamphétamine - 2 GR - 122.00€": "122.00",
+        "Méthamphétamine - 5 GR - 286.00€": "286.00",
+        "Méthamphétamine - 10 GR - 510.00€": "510.00",
+        "Méthamphétamine - 25 GR - 1120.00€": "1120.00",
+        "Méthamphétamine - 50 GR - 2000.00€": "2000.00",
+        "Méthamphétamine - 100 GR - 3576.00€": "3576.00",
+        "Méthamphétamine - 250 GR - 7150.00€": "7150.00",
+        "Méthamphétamine - 500 GR - 12700.00€": "12700.00"
+      },
+      "MDMA": {
+        "MDMA - 5 GR - 70.00€": "70.00",
+        "MDMA - 10 GR - 127.00€": "127.00",
+        "MDMA - 25 GR - 250.00€": "250.00",
+        "MDMA - 50 GR - 510.00€": "510.00",
+        "MDMA - 100 GR - 900.00€": "900.00",
+        "MDMA - 200 GR - 1780.00€": "1780.00",
+        "MDMA - 250 GR - 2100.00€": "2100.00"
+      }
+    },
+    "Prescription": {
+      "Analgésiques": {
+        "Tramadol": {
+          "Tramadol - Boite de 10 - 50mg - 2€": "2",
+          "Tramadol - Boite de 20 - 50mg - 4€": "4",
+          "Tramadol - Boite de 30 - 50mg - 6€": "6"
         },
-        "Prescription": {
-            "Antibiotiques": {
-                "Amoxicilline": {},
-                "Céfalexine": {},
-                "Azithromycine": {},
-                "Doxycycline": {},
-                "Ciprofloxacine": {},
-                "Clarithromycine": {}
-            },
-            "Analgésiques": {
-                "Tramadol": {},
-                "Codéine": {},
-                "Oxycodone": {},
-                "Morphine": {},
-                "Paracétamol (Acétaminophène)": {},
-                "Ibuprofène": {}
-            },
-            "Antidépresseurs": {
-                "Sertraline": {},
-                "Fluoxétine": {},
-                "Citalopram": {},
-                "Escitalopram": {},
-                "Venlafaxine": {},
-                "Duloxétine": {}
-            },
-            "Antihypertenseurs": {
-                "Amlodipine": {},
-                "Losartan": {},
-                "Hydrochlorothiazide": {},
-                "Lisinopril": {},
-                "Metoprolol": {},
-                "Enalapril": {}
-            },
-            "Hypnotiques/Sédatifs :": {
-                "Zolpidem": {},
-                "Diazépam": {},
-                "Lorazépam": {},
-                "Zopiclone": {},
-                "Eszopiclone": {},
-                "Zaleplon": {}
-            },
-            "Antihistaminiques :": {
-                "Cétirizine": {},
-                "Loratadine": {},
-                "Fexofénadine": {},
-                "Desloratadine": {},
-                "Lévocétirizine": {},
-                "Cétirizine + pseudoéphédrine": {}
-            },
-            "thyroïdebuster": {
-                "Levothyroxine (lévothyroxine sodique)": {},
-                "Liothyronine (triiodothyronine)": {}
-            },
-            "diabetebuster": {
-                "Metformine": {},
-                "Insuline (différents types selon les besoins)": {
-                    "Insuline à action rapide": {
-                        "Insuline lispro (Humalog)": {},
-                        "Insuline asparte (NovoLog)": {},
-                        "Insuline glulisine (Apidra)": {}
-                    },
-                    "Insuline à action intermédiaire": {
-                        "Insuline NPH (Insulatard, Humulin N, Novolin N)": {}
-                    },
-                    "Insuline à action prolongée (basale": {
-                        "Insuline glargine (Lantus, Basaglar, Toujeo)": {},
-                        "Insuline detemir (Levemir)": {},
-                        "Insuline degludec (Tresiba)": {}
-                    },
-                    "Insuline pré-mix": {
-                        "Insuline biphasique lispro (Humalog Mix)": {},
-                        "Insuline biphasique asparte (NovoMix)": {},
-                        "Insuline biphasique glargine (Soliqua)": {}
-                    }
-                },
-                "Glibenclamide": {},
-                "Glipizide": {},
-                "Sitagliptine": {},
-                "Pioglitazone": {}
-            }
+        "Codéine": {
+          "Codéine - Boite de 16 - 15mg + 500mg - 5€": "5",
+          "Codéine - Boite de 20 - 20mg + 500mg - 6€": "6",
+          "Codéine - Boite de 20 - 30mg + 200mg - 7€": "7"
+        },
+        "Oxycodone": {
+          "Oxycodone - Boite de 20 - 5mg - 15€": "15",
+          "Oxycodone - Boite de 20 - 10mg - 20€": "20",
+          "Oxycodone - Boite de 20 - 20mg - 25€": "25"
+        },
+        "Morphine": {
+          "Morphine - Boite de 20 - 10mg - 20€": "20",
+          "Morphine - Boite de 20 - 20mg - 25€": "25",
+          "Morphine - Boite de 20 - 30mg - 30€": "30"
         }
+      },
+      "Antidépresseurs": {
+        "Sertraline": {
+          "Sertraline - Boite de 28 - 50mg - 10€": "10",
+          "Sertraline - Boite de 28 - 100mg - 15€": "15"
+        },
+        "Fluoxétine": {
+          "Fluoxétine - Boite de 28 - 20mg - 8€": "8"
+        },
+        "Citalopram": {
+          "Citalopram - Boite de 28 - 20mg - 8€": "8"
+        },
+        "Escitalopram": {
+          "Escitalopram - Boite de 28 - 10mg - 8€": "8",
+          "Escitalopram - Boite de 28 - 20mg - 10€": "10"
+        },
+        "Venlafaxine": {
+          "Venlafaxine - Boite de 28 - 75mg - 10€": "10",
+          "Venlafaxine - Boite de 28 - 150mg - 15€": "15"
+        },
+        "Duloxétine": {
+          "Duloxétine - Boite de 28 - 30mg - 15€": "15",
+          "Duloxétine - Boite de 28 - 60mg - 20€": "20"
+        }
+      }
     }
+  }
 }
