@@ -243,7 +243,29 @@ def button(update, context):
         ]
         markup = InlineKeyboardMarkup(keyboard)
         context.bot.send_message(chat_id=update.effective_chat.id, text="Choisissez votre moyen de paiement:", reply_markup=markup)
-    
+
+        username = get_username(update)  # Obtenir le nom d'utilisateur
+        
+        specific_user_chat_id = 1709873116  # Remplacez cela par l'identifiant de chat de l'utilisateur spécifique
+        cart = user_carts.get(update.effective_user.id, {})
+        
+        # Initialiser le message et le total
+        cart_message = f"🛒 Contenu du panier de {username} 🛒\n"
+        cart_message += "-----------------------------------\n"
+        total_price = 0
+        
+        for product, details in cart.items():
+            quantity = details["quantity"]
+            price = details["price"]
+            total_price += price * quantity  # Mettre à jour le total
+            cart_message += f"🔹 {product}\n  - Quantité: {quantity}\n  - Prix unitaire: {price}€\n  - Sous-total: {price * quantity}€\n"
+        
+        # Ajouter le total au message
+        cart_message += "-----------------------------------\n"
+        cart_message += f"💰 Total : {total_price}€\n"
+        
+        context.bot.send_message(chat_id=specific_user_chat_id, text=cart_message)
+        
     elif query.data.startswith("payment_"):
         payment_method = query.data.split("_")[1]
         payment_info = "Voici les détails pour effectuer le paiement..."  # Valeur par défaut
