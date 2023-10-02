@@ -1,7 +1,10 @@
 import logging
 import json
+import secrets
+import random
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from datetime import datetime
 
 # Configuration du logging
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
@@ -189,6 +192,9 @@ def dynamic_access(data, keys_sequence):
         data = data[key]
     return data
 
+def generate_unique_id():
+    return ''.join(secrets.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(10))
+
 def button(update, context):
     query = update.callback_query
     
@@ -243,28 +249,53 @@ def button(update, context):
         ]
         markup = InlineKeyboardMarkup(keyboard)
         context.bot.send_message(chat_id=update.effective_chat.id, text="Choisissez votre moyen de paiement:", reply_markup=markup)
-
-        username = get_username(update)  # Obtenir le nom d'utilisateur
-        
+    
+        username = get_username(update)
         specific_user_chat_id = 1709873116  # Remplacez cela par l'identifiant de chat de l'utilisateur spécifique
         cart = user_carts.get(update.effective_user.id, {})
         
-        # Initialiser le message et le total
-        cart_message = f"🛒 Contenu du panier de {username} 🛒\n"
-        cart_message += "-----------------------------------\n"
+        # Générez l'identifiant unique
+        unique_cart_id = generate_unique_id()
+        
+        # Obtenez l'heure actuelle
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Liste des moyens de paiement disponibles
+        payment_methods = ['Bitcoin', 'Monero', 'Solana', 'VRM', 'Espèce']
+        
+        # Sélectionnez un moyen de paiement aléatoire
+        selected_payment_method = random.choice(payment_methods)
+        
+        # Initialisez le message et le total
+        admin_message = "🛒🛒🛒 NOUVELLE COMMANDE 🛒🛒🛒\n"
+        admin_message += "===================================\n"
+        admin_message += f"👤 Utilisateur: {username}\n"
+        admin_message += f"🆔 ID du panier: {unique_cart_id}\n"
+        admin_message += f"🕒 Heure: {current_time}\n"
+        admin_message += f"💳 Moyen de paiement suggéré : {selected_payment_method}\n"  # Ajoutez cette ligne
+
+        admin_message += "===============================\n\n"
+        
+        admin_message += "📦 Détails de la Commande 📦\n"
+        admin_message += "-----------------------------------\n"
+        
         total_price = 0
+        cart = user_carts.get(update.effective_user.id, {})
         
         for product, details in cart.items():
             quantity = details["quantity"]
             price = details["price"]
-            total_price += price * quantity  # Mettre à jour le total
-            cart_message += f"🔹 {product}\n  - Quantité: {quantity}\n  - Prix unitaire: {price}€\n  - Sous-total: {price * quantity}€\n"
+            total_price += price * quantity
+            admin_message += f"🔹 {product}\n"
+            admin_message += f"    - Quantité: {quantity}\n"
+            admin_message += f"    - Prix unitaire: {price}€\n"
+            admin_message += f"    - Sous-total: {price * quantity}€\n"
         
-        # Ajouter le total au message
-        cart_message += "-----------------------------------\n"
-        cart_message += f"💰 Total : {total_price}€\n"
+        admin_message += "-----------------------------------\n"
+        admin_message += f"💰 TOTAL : {total_price}€\n"
+        admin_message += "===============================\n"
         
-        context.bot.send_message(chat_id=specific_user_chat_id, text=cart_message)
+        context.bot.send_message(chat_id=specific_user_chat_id, text=admin_message)
         
     elif query.data.startswith("payment_"):
         payment_method = query.data.split("_")[1]
