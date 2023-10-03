@@ -21,20 +21,6 @@ data_to_id = {}
 current_id = 0
 users = {}
 
-# Sauvegarder les données utilisateur dans un fichier
-def save_users_to_file(users, filename="users.json"):
-    with open(filename, "w", encoding="utf-8") as file:
-        json.dump(users, file, ensure_ascii=False)
-
-# Charger les données utilisateur au démarrage
-def load_users_from_file(filename="users.json"):
-    try:
-        with open(filename, "r", encoding="utf-8") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-
-users = load_users_from_file()
 
 def read_bot_status(filename="data/bot_status.json"):
     try:
