@@ -34,6 +34,19 @@ def read_bot_status():
     except Exception as e:
         print(f"Une erreur est survenue lors de la lecture du fichier bot_status.json : {e}")
     return True
+
+def send_closure_message(context, chat_id):
+    context.bot.send_message(chat_id=chat_id,
+                             text="🚧 *Service temporairement indisponible* 🚧\n\n"
+                                  "Chers utilisateurs,\n\n"
+                                  "Nous vous informons que notre service est actuellement indisponible pour l'une des raisons suivantes :\n"
+                                  "1️⃣ *Maintenance des serveurs* : Nos équipes travaillent à l'amélioration de notre infrastructure.\n"
+                                  "2️⃣ *Trop grand nombre de commandes* : Nous avons atteint notre capacité maximale.\n"
+                                  "3️⃣ *Mise à jour du système* : Nous mettons à jour notre plateforme.\n\n"
+                                  "Nous prévoyons de rétablir le service dans les prochaines *24* heures.\n"
+                                  "Pour toute question, n'hésitez pas à nous contacter.\n\n"
+                                  "Merci de votre compréhension.",
+                             parse_mode='Markdown')
     
 def read_json_file(filename_or_url, key=None, default_value=None):
     try:
@@ -180,24 +193,13 @@ def generate_keyboard(data, prefix="", back_data=None):
     return InlineKeyboardMarkup(keyboard)
 
 def start(update, context):
+    # Vérification de l'état du bot
+    if not read_bot_status():
+        send_closure_message(context, update.effective_chat.id)
+        return
+
     user_id = update.effective_user.id
     username = get_username(update)
-
-    is_open = read_bot_status()
-    
-    if not is_open:
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="🚧 *Service temporairement indisponible* 🚧\n\n"
-                                      "Chers utilisateurs,\n\n"
-                                      "Nous vous informons que notre service est actuellement indisponible pour l'une des raisons suivantes :\n"
-                                      "1️⃣ *Maintenance des serveurs* : Nos équipes travaillent à l'amélioration de notre infrastructure.\n"
-                                      "2️⃣ *Trop grand nombre de commandes* : Nous avons atteint notre capacité maximale.\n"
-                                      "3️⃣ *Mise à jour du système* : Nous mettons à jour notre plateforme.\n\n"
-                                      "Nous prévoyons de rétablir le service dans les prochaines *24* heures.\n"
-                                      "Pour toute question, n'hésitez pas à nous contacter.\n\n"
-                                      "Merci de votre compréhension.",
-                                 parse_mode='Markdown')
-        return    
 
     # Vérifier si l'utilisateur existe déjà
     if user_id not in users:
