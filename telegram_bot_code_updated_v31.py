@@ -34,13 +34,6 @@ def get_username(update):
     user = update.effective_user
     return user.username if user and user.username else "no user"
 
-def update_user_info(user_id, action_type, update, context=None):
-    user_info = users.get(user_id, {"username": get_username(update), "actions": []})
-    action = {"type": action_type, "details": context}
-    user_info["actions"].append(action)
-    users[user_id] = user_info
-    save_users_to_file(users)
-
 def clear_cart(update, context):
     user_id = update.effective_user.id
     username = get_username(update)
@@ -186,10 +179,6 @@ def start(update, context):
 
     # Vérifier si l'utilisateur existe déjà
     if user_id not in users:
-        users[user_id] = {"username": username, "actions": []}
-        save_users_to_file(users) # Sauvegarder les données utilisateur dans le fichier
-
-        # Message de bienvenue pour les nouveaux utilisateurs
         welcome_message = f"Bienvenue, {username}!"
         context.bot.send_message(chat_id=update.effective_chat.id, text=welcome_message)
 
