@@ -36,6 +36,14 @@ def load_users_from_file(filename="users.json"):
 
 users = load_users_from_file()
 
+def read_bot_status(filename="data/bot_status.json"):
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            data = json.load(file)
+            return data.get("is_open", True)
+    except FileNotFoundError:
+        return True
+
 def get_username(update):
     user = update.effective_user
     return user.username if user and user.username else "no user"
@@ -174,6 +182,21 @@ def generate_keyboard(data, prefix="", back_data=None):
 def start(update, context):
     user_id = update.effective_user.id
     username = get_username(update)
+
+    is_open = read_bot_status()
+    if not is_open:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="🚧 *Service temporairement indisponible* 🚧\n\n"
+                                      "Chers utilisateurs,\n\n"
+                                      "Nous vous informons que notre service est actuellement indisponible pour l'une des raisons suivantes :\n"
+                                      "1️⃣ *Maintenance des serveurs* : Nos équipes travaillent à l'amélioration de notre infrastructure.\n"
+                                      "2️⃣ *Trop grand nombre de commandes* : Nous avons atteint notre capacité maximale.\n"
+                                      "3️⃣ *Mise à jour du système* : Nous mettons à jour notre plateforme.\n\n"
+                                      "Nous prévoyons de rétablir le service dans les prochaines *24* heures.\n"
+                                      "Pour toute question, n'hésitez pas à nous contacter.\n\n"
+                                      "Merci de votre compréhension.",
+                                 parse_mode='Markdown')
+        return    
 
     # Vérifier si l'utilisateur existe déjà
     if user_id not in users:
