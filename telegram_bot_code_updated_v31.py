@@ -2,6 +2,7 @@ import logging
 import json
 import secrets
 import random
+import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 from datetime import datetime
@@ -22,13 +23,21 @@ current_id = 0
 users = {}
 
 
-def read_bot_status(filename="data/bot_status.json"):
+def read_json_file(filename_or_url, key=None, default_value=None):
     try:
-        with open(filename, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            return data.get("is_open", True)
+        if filename_or_url.startswith("http"):
+            response = requests.get(filename_or_url)
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                return default_value
+        else:
+            with open(filename_or_url, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        
+        return data.get(key, default_value) if key else data
     except FileNotFoundError:
-        return True
+        return default_value
 
 def get_username(update):
     user = update.effective_user
@@ -162,7 +171,7 @@ def start(update, context):
     user_id = update.effective_user.id
     username = get_username(update)
 
-    is_open = read_bot_status()
+    is_open = read_json_file("https://raw.githubusercontent.com/lynxerinc/test/main/data/bot_status.json", "is_open", True)
     if not is_open:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text="🚧 *Service temporairement indisponible* 🚧\n\n"
