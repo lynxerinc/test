@@ -291,13 +291,13 @@ def button(update, context):
         
         # Initialisez le message et le total
         admin_message = "🛒🛒🛒 NOUVELLE COMMANDE 🛒🛒🛒\n"
-        admin_message += "===================================\n"
+        admin_message += "===========================\n"
         admin_message += f"👤 Utilisateur: {username}\n"
         admin_message += f"🆔 ID du panier: {unique_cart_id}\n"
         admin_message += f"🕒 Heure: {current_time}\n"
         admin_message += f"💳 Moyen de paiement suggéré : {selected_payment_method}\n"  # Ajoutez cette ligne
 
-        admin_message += "===============================\n\n"
+        admin_message += "===========================\n\n"
         
         admin_message += "📦 Détails de la Commande 📦\n"
         admin_message += "-----------------------------------\n"
@@ -316,7 +316,7 @@ def button(update, context):
         
         admin_message += "-----------------------------------\n"
         admin_message += f"💰 TOTAL : {total_price}€\n"
-        admin_message += "===============================\n"
+        admin_message += "===========================\n"
         
         context.bot.send_message(chat_id=specific_user_chat_id, text=admin_message)
         
