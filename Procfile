@@ -1,1 +1,1 @@
-worker: python telegram_bot_code_updated_v31.py
+worker: python user_bot.py

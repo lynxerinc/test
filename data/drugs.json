@@ -1,22 +1,22 @@
 {
-  "Gaz à inhaler": {
-    "Protoxyde d'Azote": {
-      "Protoxyde D'azote 666G - Creamy Deluxe": {
-        "6 bonbonnes - 120€": "120",
-        "12 bonbonnes - 240€": "240",
-        "18 bonbonnes - 360€": "360"
-      },
-      "Protoxyde d'azote 580G - Saveur CD": {
-        " Fraise": {
-          "6 bonbonnes Fraise - 138€": "138"
-        },
-        "Sucre": {
-          "6 bonbonnes Sucre - 138€": "138"
-        },
-        "Pêche": {
-          "6 bonbonnes Pêche - 138€": "138"
-        }
-      }
-    }
-  }
+	"Gaz à inhaler": {
+		"Protoxyde d'Azote": {
+			"Protoxyde D'azote 666G - Creamy Deluxe": {
+				"6 bonbonnes - 120€": "120",
+				"12 bonbonnes - 240€": "240",
+				"18 bonbonnes - 360€": "360"
+			},
+			"Protoxyde d'azote 580G - Saveur CD": {
+				" Fraise": {
+					"6 bonbonnes Fraise - 138€": "138"
+				},
+				"Sucre": {
+					"6 bonbonnes Sucre - 138€": "138"
+				},
+				"Pêche": {
+					"6 bonbonnes Pêche - 138€": "138"
+				}
+			}
+		}
+	}
 }
