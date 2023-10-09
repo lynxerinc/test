@@ -13,7 +13,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Charger les données du fichier drugs.json avec l'encodage correct
-with open("data/drugs.json", "r", encoding="utf-8") as file:
+with open("data/data.json", "r", encoding="utf-8") as file:
     drugs_data = json.load(file)
 
 user_carts = {}
@@ -34,19 +34,6 @@ def read_bot_status():
     except Exception as e:
         print(f"Une erreur est survenue lors de la lecture du fichier bot_status.json : {e}")
     return True
-
-def send_closure_message(context, chat_id):
-    context.bot.send_message(chat_id=chat_id,
-                             text="🚧 *Service temporairement indisponible* 🚧\n\n"
-                                  "Chers utilisateurs,\n\n"
-                                  "Nous vous informons que notre service est actuellement indisponible pour l'une des raisons suivantes :\n"
-                                  "1️⃣ *Maintenance des serveurs* : Nos équipes travaillent à l'amélioration de notre infrastructure.\n"
-                                  "2️⃣ *Trop grand nombre de commandes* : Nous avons atteint notre capacité maximale.\n"
-                                  "3️⃣ *Mise à jour du système* : Nous mettons à jour notre plateforme.\n\n"
-                                  "Nous prévoyons de rétablir le service dans les prochaines *24* heures.\n"
-                                  "Pour toute question, n'hésitez pas à nous contacter.\n\n"
-                                  "Merci de votre compréhension.",
-                             parse_mode='Markdown')
     
 def read_json_file(filename_or_url, key=None, default_value=None):
     try:
@@ -235,28 +222,7 @@ def button(update, context):
 
     elif query.data == "checkout":
         info_message = """
-        🛒 **Procédure de Checkout - Étape par Étape** 🛒
-        ---------------------------------------
-        
-        🌟 **Étape 1 : Sélection du Mode de Paiement**
-        À cette étape, vous aurez le choix entre plusieurs options de paiement : Bitcoin, Monero, Solana, VRM, et paiement en espèces pour les retraits sur place. Chaque option a ses propres avantages et inconvénients. Assurez-vous de choisir celle qui vous convient le mieux, car cela déterminera le processus que vous devrez suivre par la suite.
-        
-        🌟 **Étape 2 : Fourniture du Fichier PGP**
-        Avant de procéder au paiement, vous devrez nous fournir un fichier PGP contenant les détails de votre livraison. Ce fichier sera utilisé pour chiffrer toutes les communications ultérieures concernant votre commande.
-        
-        🌟 **Étape 3 : Vérification des Informations**
-        Une fois le fichier PGP reçu, nous procéderons à la vérification des informations qu'il contient. Ce processus peut prendre un peu de temps, mais il est essentiel pour garantir la confidentialité et la sécurité de votre commande.
-        
-        🌟 **Étape 4 : Détails du Paiement**
-        Après avoir vérifié vos informations, nous vous enverrons les détails pour effectuer le paiement. Ces informations seront chiffrées avec le fichier PGP que vous avez fourni pour garantir leur sécurité.
-        
-        🌟 **Étape 5 : Confirmation et Livraison**
-        Après réception et vérification du paiement, votre commande sera préparée et expédiée. Vous recevrez une confirmation chiffrée et des informations sur le suivi de la livraison.
-        
-        📌 **Note Importante**
-        Pour garantir une expérience d'achat sécurisée, assurez-vous de suivre ces étapes attentivement. En cas de problème ou de question, n'hésitez pas à nous contacter.
-        
-        Merci de faire confiance à notre service ! Nous nous réjouissons de vous offrir une expérience d'achat sécurisée et satisfaisante.
+        🛒 **Procédure de Checkout
         """
         context.bot.send_message(chat_id=update.effective_chat.id, text=info_message)
         
@@ -325,31 +291,8 @@ def button(update, context):
             payment_info = "Option Bitcoin confirmée. Veuillez suivre les étapes suivantes :\n" \
                            "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
                            "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Bitcoin pour effectuer le paiement."
-        
-        elif payment_method == "monero":
-            payment_info = "Option Monero confirmée. Veuillez suivre les étapes suivantes :\n" \
-                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
-                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Monero pour effectuer le paiement."
-        
-        elif payment_method == "solana":
-            payment_info = "Option Solana confirmée. Veuillez suivre les étapes suivantes :\n" \
-                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
-                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse Solana pour effectuer le paiement."
-        
-        elif payment_method == "vrm":
-            payment_info = "Option VRM confirmée. Veuillez suivre les étapes suivantes :\n" \
-                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
-                           "2. Une fois les informations vérifiées, nous vous enverrons l'adresse VRM pour effectuer le paiement."
-        
-        elif payment_method == "cash":
-            payment_info = "Option Espèce confirmée (Retraits sur place uniquement). Veuillez suivre les étapes suivantes :\n" \
-                           "1. Fournissez-nous votre fichier PGP contenant les détails de votre livraison.\n" \
-                           "2. Une fois les informations vérifiées, vous pourrez vous rendre au point de retrait pour effectuer le paiement en espèces."
 
-    
         context.bot.send_message(chat_id=update.effective_chat.id, text=payment_info)
-
-    
         # Demande du fichier PGP
         keyboard = [[InlineKeyboardButton("🔐 Envoyer le fichier PGP", callback_data="send_pgp")]]
         markup = InlineKeyboardMarkup(keyboard)

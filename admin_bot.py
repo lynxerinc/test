@@ -1,69 +1,78 @@
-
+# Importations
 import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackContext
+import json
+import secrets
+import random
+import requests
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from datetime import datetime
 
-# Configuration des logs
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+# Configuration du logging
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Liste des IDs d'admin pour la liste blanche
-admin_ids = ["1709873116"]  # Remplacez par vos IDs d'admin
+# Charger les données depuis un fichier JSON
+with open("user_messages.json", "r", encoding="utf-8") as file:
+    user_messages = json.load(file)
 
-# Drapeau pour vérifier si l'admin est vérifié
-is_verified_admin = False
+# Charger les données du fichier drugs.json avec l'encodage correct
+drugs_data = json.load(open("data/drugs.json"))
 
-# Espace réservé pour la fonctionnalité admin
-def admin_functionality(update: Update, context: CallbackContext) -> None:
-    print("Admin functionality called")  # Debugging print
-    update.message.reply_text("Fonctionnalité admin en attente.")
-    logger.info(f"Fonctionnalité admin accédée par {update.effective_user.id}")
+# Initialisation des variables globales
+user_carts = {}
+user_message_ids = {}
+id_to_data = {}
+data_to_id = {}
+current_id = 0
 
-# Fonction pour vérifier l'admin
-def verify_admin(update: Update, context: CallbackContext) -> None:
-    print("Verify admin called")  # Debugging print
-    global is_verified_admin
-    user_id = str(update.effective_user.id)
-    if user_id in admin_ids:
-        is_verified_admin = True
-        update.message.reply_text("Vous êtes vérifié en tant qu'admin.")
-        logger.info(f"Admin vérifié : {user_id}")
-    else:
-        update.message.reply_text("Vous n'êtes pas autorisé à utiliser ce bot.")
-        logger.warning(f"Tentative d'accès non autorisée par {user_id}")
+# Fonctions
+def read_json_file(filename_or_url, key=None, default_value=None):
+    try:
+        if filename_or_url.startswith("http"):
+            response = requests.get(filename_or_url)
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                return default_value
+        else:
+            with open(filename_or_url, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        
+        return data.get(key, default_value) if key else data
+    except FileNotFoundError:
+        return default_value
 
-# Fonction de démarrage aussi abstraite que possible
-def start(update: Update, context: CallbackContext) -> None:
-    global is_verified_admin
-    if not is_verified_admin:
-        update.message.reply_text("Vous devez d'abord vous vérifier en tant qu'admin. Utilisez /verify.")
-        logger.warning(f"Vérification d'admin requise pour {update.effective_user.id}")
-        return
-    keyboard = [
-        [InlineKeyboardButton("Option 1", callback_data='1')],
-        [InlineKeyboardButton("Option 2", callback_data='2')],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("Choisissez une option :", reply_markup=reply_markup)
-    logger.info(f"Commande de démarrage accédée par un admin vérifié : {update.effective_user.id}")
+def read_bot_status():
+    return read_json_file('bot_status_url', key='is_open', default_value=True)
 
-def main() -> None:
-    print("Bot is starting")  # Debugging print
-    # Initialisation de l'Updater
-    updater = Updater("6140284584:AAF8gviWzKMkHEn5TktrVMral7PPMW7uxXk")
+def send_closure_message(context, chat_id):
+    message = user_messages.get("closure_message", "")
+    context.bot.send_message(chat_id=chat_id, text=message, parse_mode='Markdown')
+
+def get_username(update):
+    user = update.effective_user
+    return user.username if user and user.username else "no user"
+
+# Add other required functions here...
+
+def button(update, context):
+    query = update.callback_query
     
-    # Récupération du dispatcher pour enregistrer les gestionnaires
-    dispatcher = updater.dispatcher
+    if query.data == "clear_cart":
+        clear_cart(update, context)
+    elif query.data == "cart":
+        display_cart(update, context)
+    
+    query.answer()
 
-    # Enregistrement des gestionnaires de commande
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("verify", verify_admin))
-    dispatcher.add_handler(CommandHandler("admin", admin_functionality))
-    
-    logger.info("Bot started")
-    
-    # Démarrage du Bot
+# Add other logic and functions as needed...
+
+def main():
+    updater = Updater(token='6140284584:AAF8gviWzKMkHEn5TktrVMral7PPMW7uxXk', use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CallbackQueryHandler(button))
     updater.start_polling()
     updater.idle()
 

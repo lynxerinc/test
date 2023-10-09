@@ -1,0 +1,36 @@
+{
+    "Identité et Piratage": {
+        "documents d'identité": [
+            "Passeports",
+            "Cartes d'identité nationale",
+            "Permis de conduire",
+            "Cartes de sécurité sociale",
+            "Cartes de résident permanent",
+            "Cartes de crédit et de débit",
+            "Cartes de santé",
+            "Certificats de naissance",
+            "Certificats de mariage",
+            "Certificats de décès"
+        ],
+        "faux certificats d'éducation": [
+            "FAUX CAP, BEP, BP/MC",
+            "FAUX BAC",
+            "FAUX BAC PRO",
+            "FAUX BAC TECHNOLOGIQUE",
+            "FAUX DUT",
+            "FAUX DEUG",
+            "FAUX BTS",
+            "FAUX LICENCE",
+            "FAUX MASTER OU DESS",
+            "FAUX DOCTORAT",
+            "FAUX DCG, DEC, OU DECF",
+            "FAUX DEES",
+            "FAUX DIPLÔME DU BREVET D’ÉTAT D’ÉDUCATEUR SPORTIF",
+            "FAUX TOEIC",
+            "ENQUÊTE",
+            "DONNÉES PERSO"
+        ],
+        "Matériel pour pirater des systèmes de sécurité": [],
+        "Dispositifs d'écoute clandestine": []
+    }
+}
