@@ -13,7 +13,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Charger les données du fichier drugs.json avec l'encodage correct
-with open("data/data.json", "r", encoding="utf-8") as file:
+with open("data/drugs.json", "r", encoding="utf-8") as file:
     drugs_data = json.load(file)
 
 user_carts = {}

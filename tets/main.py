@@ -92,7 +92,7 @@ def button(update, context):
         back_data = "-1" if len(keys) == 1 else str(data_to_id["/".join(keys[:-1])])
 
         if isinstance(next_data, dict):
-            keyboard = generate_keyboard(next_data, current_key + "/", back_data)
+            keyboard = generate_keyboard(next_data, current_key + "/")
             query.edit_message_text(text=f"Vous avez sélectionné {keys[-1]}. Choisissez une sous-catégorie:", reply_markup=keyboard)
         else:
             if "€" in keys[-1]:
