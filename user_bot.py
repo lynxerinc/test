@@ -344,7 +344,7 @@ def button(update, context):
             query.edit_message_text(text=f"Vous avez sélectionné {keys[-1]}. Aucune sous-catégorie disponible.")
     
 def main():
-    updater = Updater(token='5938970819:AAGH21yb_8MEn3HieRRJ-4B1wNrDhIzLzHU', use_context=True)
+    updater = Updater(token='5938970819:AAFJJShIgAMBevm5syKbZPqi1tkhoXrM_uE', use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CallbackQueryHandler(button))
