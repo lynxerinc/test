@@ -67,22 +67,29 @@ Cette structuration permettra une meilleure organisation et maintenance du code.
 
 Voici l'arbre des dossiers et sous-dossiers :
 
-- BotProject/
-    - main.py
-    - README.md
-    - config.json
-    - lib/
-        - initiation.py
-        - menu_manager.py
-        - category_manager.py
-        - product_loader.py
-    - user_interaction/
-        - product_selection.py
-        - cart_manager.py
-        - checkout_manager.py
-    - utils/
-        - subtotal_calculator.py
-        - payment_options.py
-    - admin/
-        - order_confirmation.py
-        - admin_notification.py
+BotProject/
+├── admin/
+│   ├── admin_notification.py
+│   └── order_confirmation.py
+├── config.json
+├── data/	
+│   ├── banned_users.json
+│   └── products.json
+├── lib/
+│   ├── category_manager.py
+│   ├── initiation.py
+│   ├── menu_manager.py
+│   └── product_loader.py
+├── logging/
+│   ├── error_log.py
+│   └── user_activity_log.py
+├── main.py
+├── README.md
+├── user_interaction/
+│   ├── cart_manager.py
+│   ├── checkout_manager.py
+│   └── product_selection.py
+└── utils/
+    ├── ban_manager.py
+    ├── payment_options.py
+    └── subtotal_calculator.py
