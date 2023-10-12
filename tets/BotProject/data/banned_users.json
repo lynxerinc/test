@@ -1,0 +1,12 @@
+{
+  "banned_users": [
+    {
+      "user_id": 123456,
+      "reason": "Comportement inapproprié"
+    },
+    {
+      "user_id": 789012,
+      "reason": "Spam"
+    }
+  ]
+}
